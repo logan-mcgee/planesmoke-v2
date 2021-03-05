@@ -1,5 +1,5 @@
-local sr, sg, sb = 255, 0, 0 -- Smoke colour (r,g,b)
-local ss = 1.0 -- Smoke size
+local sr, sg, sb = config.defaults.r, config.defaults.g, config.defaults.b
+local ss = config.defaults.size
 
 currentPtfx = {}
 

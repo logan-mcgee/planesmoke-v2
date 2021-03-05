@@ -2,6 +2,13 @@ config = {}
 
 config.perf = true -- Makes smoke disable if no driver
 
+config.defaults = {
+  r = 255,
+  g = 0,
+  b = 0,
+  size = 2.0
+}
+
 config.offsets = {
   [`cuban800`] = { 0.0, -3.0, -0.3 },
   [`mogul`] = { 0.0, -5.0, 0.7 },
