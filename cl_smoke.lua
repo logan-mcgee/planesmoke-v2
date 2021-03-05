@@ -29,19 +29,22 @@ Citizen.CreateThread(function ()
             local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
 
-            local ox, oy, oz
+            local outputPos
             if (config.offsets[vehModel]) then
-              ox, oy, oz = config.offsets[vehModel][1], config.offsets[vehModel][2], config.offsets[vehModel][3]
+              outputPos = vector3(config.offsets[vehModel][1], config.offsets[vehModel][2], config.offsets[vehModel][3])
             else
-              ox, oy, oz = 0.0, -3.0, 0.0
+              local min, max = GetModelDimensions(GetEntityModel(veh))
+              local offset = vector3(0.0, min.y, 0.0)--GetOffsetFromEntityInWorldCoords(veh, 0.0, min.y, 0.0)
+              outputPos = offset
             end
-
             UseParticleFxAssetNextCall(fxDict)
-            currentPtfx[veh] = StartParticleFxLoopedOnEntityBone_2(fxName, veh, ox, oy, oz, 0.0, 0.0, 0.0, (config.offsets[vehModel] and -1 or GetEntityBoneIndexByName(veh, "engine")), size + 0.0, ox, oy, oz)
-            
+            currentPtfx[veh] = StartParticleFxLoopedOnEntityBone_2(fxName, veh, outputPos, 0.0, 0.0, 0.0, -1, size + 0.0, outputPos)
+
             SetParticleFxLoopedScale(currentPtfx[veh], size + 0.0)
             SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
             SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
+
+            print(currentPtfx[veh])
           else
             local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
@@ -71,6 +74,24 @@ Citizen.CreateThread(function ()
     end
 end)
 
+if (config.dev) then
+  Citizen.CreateThread(function()
+    while true do
+      Wait(0)
+      local ped = PlayerPedId()
+      if (IsPedInAnyPlane(ped)) then
+        local veh = GetVehiclePedIsIn(ped, false)
+        local min, max = GetModelDimensions(GetEntityModel(veh))
+        local offset = GetOffsetFromEntityInWorldCoords(veh, 0.0, min.y, 0.0)
+        DrawLine(GetEntityCoords(veh), offset, 0, 255, 0, 255)
+        SetDrawOrigin(offset)
+        DrawSprite('helicopterhud', 'hud_dest', 0.0, 0.0, 0.02, 0.03, 0.0, 255, 0, 0, 255)
+        ClearDrawOrigin()
+      end
+    end
+  end)
+end
+
 function doToggle()
   local plyr = PlayerPedId()
   if (IsPedInAnyPlane(plyr)) then
@@ -79,6 +100,7 @@ function doToggle()
     DecorSetBool(plane, "smoke_active", not DecorGetBool(plane, "smoke_active"))
     DecorSetInt(plane, "smoke_color", encodeSmoke(sr, sg, sb))
     DecorSetFloat(plane, "smoke_size", ss)
+    print('called '..sr..' '..sg..' '..sb..' : '..ss)
   end
 end
 
