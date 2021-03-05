@@ -6,7 +6,7 @@ config.defaults = {
   r = 255,
   g = 0,
   b = 0,
-  size = 2.0
+  size = 1.0
 }
 
 config.offsets = {
