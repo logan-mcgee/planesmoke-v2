@@ -108,8 +108,8 @@ RegisterCommand("setsmoke", function(src, args, raw)
   local plyr = PlayerPedId()
   sr, sg, sb, ss = tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), (tonumber(args[4]) * 1.0)
   if (sr and sg and sb and ss) then
-    if (ss > 2.0) then
-      ss = 2.0
+    if (ss > config.maxsize) then
+      ss = config.maxsize
     elseif (ss < 0.1) then
       ss = 0.1
     end

@@ -1,6 +1,9 @@
 config = {}
 
 config.perf = true -- Makes smoke disable if no driver
+config.dev = false
+
+config.maxsize = 2.0
 
 config.defaults = {
   r = 255,
