@@ -10,16 +10,15 @@ Citizen.CreateThread(function ()
 
   local fxDict = "scr_ar_planes"
   local fxName = "scr_ar_trail_smoke"
-  
+
   RequestNamedPtfxAsset(fxDict)
-  
+
   while not HasNamedPtfxAssetLoaded(fxDict) do
     Wait(0)
   end
 
   while true do
     Wait(500)
-
     for _, player in ipairs(GetActivePlayers()) do
       local ped = GetPlayerPed(player)
       if (IsPedInAnyPlane(ped)) then
@@ -63,8 +62,10 @@ Citizen.CreateThread(function ()
           stopSmoke(veh)
         end
 
-        if (config.perf and IsVehicleSeatFree(veh, -1)) then
-          stopSmoke(veh)
+        if (config.perf) then
+          if (IsVehicleSeatFree(veh, -1) or GetEntityHeightAboveGround(veh) <= 1.5 or not IsEntityInAir(veh)) then
+            stopSmoke(veh)
+          end
         end
       end
     end
@@ -84,11 +85,13 @@ end
 RegisterCommand("setsmoke", function(src, args, raw)
   local plyr = PlayerPedId()
   if (IsPedInAnyPlane(plyr)) then
-    local plane = GetVehiclePedIsIn(plyr, false)
-    sr, sg, sb, ss = tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), tonumber(args[4])
+    local veh = GetVehiclePedIsIn(plyr, false)
+    if (GetEntityHeightAboveGround(veh) >= 1.5 or IsEntityInAir(veh)) then
+      sr, sg, sb, ss = tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), tonumber(args[4])
 
-    DecorSetInt(plane, "smoke_color", encodeSmoke(sr, sg, sb))
-    DecorSetFloat(plane, "smoke_size", ss)
+      DecorSetInt(veh, "smoke_color", encodeSmoke(sr, sg, sb))
+      DecorSetFloat(veh, "smoke_size", ss)
+    end
   end
 end)
 
