@@ -61,7 +61,7 @@ Citizen.CreateThread(function ()
     end
 
     for veh, ptfx in pairs(currentPtfx) do
-      if (IsEntityDead(veh)) then
+      if (IsEntityDead(veh) or not DoesEntityExist(veh)) then
         stopSmoke(veh)
       end
       if (config.perf) then
