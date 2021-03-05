@@ -58,20 +58,19 @@ Citizen.CreateThread(function ()
           currentPtfx[veh] = nil
         end
       end
+    end
+
+    for veh, ptfx in pairs(currentPtfx) do
+      if (IsEntityDead(veh)) then
+        stopSmoke(veh)
       end
-
-      for veh, ptfx in pairs(currentPtfx) do
-        if (IsEntityDead(veh)) then
+      if (config.perf) then
+        if (IsVehicleSeatFree(veh, -1) or GetEntityHeightAboveGround(veh) <= 1.5 or not IsEntityInAir(veh)) then
           stopSmoke(veh)
-        end
-
-        if (config.perf) then
-          if (IsVehicleSeatFree(veh, -1) or GetEntityHeightAboveGround(veh) <= 1.5 or not IsEntityInAir(veh)) then
-            stopSmoke(veh)
-          end
         end
       end
     end
+  end
 end)
 
 if (config.dev) then
@@ -95,25 +94,47 @@ end
 function doToggle()
   local plyr = PlayerPedId()
   if (IsPedInAnyPlane(plyr)) then
-    local plane = GetVehiclePedIsIn(plyr, false)
-
-    DecorSetBool(plane, "smoke_active", not DecorGetBool(plane, "smoke_active"))
-    DecorSetInt(plane, "smoke_color", encodeSmoke(sr, sg, sb))
-    DecorSetFloat(plane, "smoke_size", ss)
-    print('called '..sr..' '..sg..' '..sb..' : '..ss)
+    local veh = GetVehiclePedIsIn(plyr, false)
+    if (GetEntityHeightAboveGround(veh) >= 1.5 or IsEntityInAir(veh)) then
+      DecorSetBool(veh, "smoke_active", not DecorGetBool(veh, "smoke_active"))
+      DecorSetInt(veh, "smoke_color", encodeSmoke(sr, sg, sb))
+      DecorSetFloat(veh, "smoke_size", ss)
+      print('called '..sr..' '..sg..' '..sb..' : '..ss)
+    end
   end
 end
 
 RegisterCommand("setsmoke", function(src, args, raw)
   local plyr = PlayerPedId()
-  if (IsPedInAnyPlane(plyr)) then
-    local veh = GetVehiclePedIsIn(plyr, false)
-    if (GetEntityHeightAboveGround(veh) >= 1.5 or IsEntityInAir(veh)) then
-      sr, sg, sb, ss = tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), tonumber(args[4])
+  sr, sg, sb, ss = tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), (tonumber(args[4]) * 1.0)
+  if (sr and sg and sb and ss) then
+    if (ss > 2.0) then
+      ss = 2.0
+    elseif (ss < 0.1) then
+      ss = 0.1
+    end
 
+    if (sr > 255) then sr = 255 elseif (sr < 0) then sr = 0 end
+    if (sg > 255) then sg = 255 elseif (sg < 0) then sg = 0 end
+    if (sb > 255) then sb = 255 elseif (sb < 0) then sb = 0 end
+
+    TriggerEvent('chat:addMessage', {
+      color = { 255, 0, 0 },
+      multiline = true,
+      args = {"Smokester", "Set smoke settings to R: ^8"..sr.."^7, G: ^2"..sg.."^7, B: ^4"..sb.."^7, Size: "..ss}
+    })
+
+    if (IsPedInAnyPlane(plyr)) then
+      local veh = GetVehiclePedIsIn(plyr, false)
       DecorSetInt(veh, "smoke_color", encodeSmoke(sr, sg, sb))
       DecorSetFloat(veh, "smoke_size", ss)
     end
+  else
+    TriggerEvent('chat:addMessage', {
+      color = { 255, 0, 0 },
+      multiline = true,
+      args = {"Smokester", "Incorrect usage. Usage: /setsmoke r g b size"}
+    })
   end
 end)
 
