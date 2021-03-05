@@ -5,17 +5,17 @@ currentPtfx = {}
 
 Citizen.CreateThread(function ()
   DecorRegister("smoke_active", 2)
-	DecorRegister("smoke_color", 3)
+  DecorRegister("smoke_color", 3)
   DecorRegister("smoke_size", 1)
 
   local fxDict = "scr_ar_planes"
-	local fxName = "scr_ar_trail_smoke"
-
-	RequestNamedPtfxAsset(fxDict)
-
-	while not HasNamedPtfxAssetLoaded(fxDict) do
-		Wait(0)
-	end
+  local fxName = "scr_ar_trail_smoke"
+  
+  RequestNamedPtfxAsset(fxDict)
+  
+  while not HasNamedPtfxAssetLoaded(fxDict) do
+    Wait(0)
+  end
 
   while true do
     Wait(500)
@@ -41,15 +41,15 @@ Citizen.CreateThread(function ()
             currentPtfx[veh] = StartParticleFxLoopedOnEntityBone_2(fxName, veh, ox, oy, oz, 0.0, 0.0, 0.0, (config.offsets[vehModel] and -1 or GetEntityBoneIndexByName(veh, "engine")), size + 0.0, ox, oy, oz)
             
             SetParticleFxLoopedScale(currentPtfx[veh], size + 0.0)
-					  SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
-					  SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
+            SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
+            SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
           else
             local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
 
             SetParticleFxLoopedScale(currentPtfx[veh], size + 0.0)
-					  SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
-					  SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
+            SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
+            SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
           end
         elseif not DecorGetBool(veh, "smoke_active") and currentPtfx[veh] then
           StopParticleFxLooped(currentPtfx[veh], 0)
