@@ -111,8 +111,8 @@ end
 
 function doToggle()
   local plyr = PlayerPedId()
+  local veh = GetVehiclePedIsIn(plyr, false)
   if (shouldPedHaveSmoke(plyr) and GetPedInVehicleSeat(veh, -1) == plyr) then
-    local veh = GetVehiclePedIsIn(plyr, false)
     if ((GetEntityHeightAboveGround(veh) >= 1.5 or IsEntityInAir(veh)) and not IsVehicleOnAllWheels(veh)) then
       DecorSetBool(veh, "smoke_active", not DecorGetBool(veh, "smoke_active"))
       DecorSetInt(veh, "smoke_color", encodeSmoke(sr, sg, sb))
@@ -141,8 +141,8 @@ RegisterCommand("setsmoke", function(src, args, raw)
       args = {"Smokester", "Set smoke settings to R: ^8"..sr.."^7, G: ^2"..sg.."^7, B: ^4"..sb.."^7, Size: "..ss}
     })
 
+    local veh = GetVehiclePedIsIn(plyr, false)
     if (shouldPedHaveSmoke(plyr) and GetPedInVehicleSeat(veh, -1) == plyr) then
-      local veh = GetVehiclePedIsIn(plyr, false)
       DecorSetInt(veh, "smoke_color", encodeSmoke(sr, sg, sb))
       DecorSetFloat(veh, "smoke_size", ss)
     end
