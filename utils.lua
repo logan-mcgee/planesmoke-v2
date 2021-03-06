@@ -15,3 +15,8 @@ function stopSmoke(veh)
   StopParticleFxLooped(currentPtfx[veh], 0)
   currentPtfx[veh] = nil
 end
+
+function shouldPedHaveSmoke(ped)
+  local veh = GetVehiclePedIsIn(ped, false)
+  return (IsPedInAnyPlane(ped) or config.offsets[GetEntityModel(veh)])
+end

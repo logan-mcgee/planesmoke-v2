@@ -4,6 +4,7 @@ config.perf = true -- Makes smoke disable if no driver
 config.dev = false
 
 config.maxsize = 2.0
+config.maxdist = 500.0 -- Range before smoke is hidden
 
 config.defaults = {
   r = 255,
