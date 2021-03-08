@@ -27,7 +27,7 @@ Citizen.CreateThread(function ()
           local dist = #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(veh))
           if not currentPtfx[veh] and dist < config.maxdist then
             local vehModel = GetEntityModel(veh)
-            local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
+            local r, g, b = 143, 52, 168--decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
 
             local outputPos
@@ -43,14 +43,14 @@ Citizen.CreateThread(function ()
 
             SetParticleFxLoopedScale(currentPtfx[veh], size + 0.0)
             SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
-            SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
+            SetParticleFxLoopedColour(currentPtfx[veh], (r / 255) + 0.0, (g / 255) + 0.0, (b / 255) + 0.0, 0)
           elseif currentPtfx[veh] and dist < config.maxdist then
             local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
 
             SetParticleFxLoopedScale(currentPtfx[veh], size + 0.0)
             SetParticleFxLoopedRange(currentPtfx[veh], 1000.0)
-            SetParticleFxLoopedColour(currentPtfx[veh], r + 0.0, g + 0.0, b + 0.0)
+            SetParticleFxLoopedColour(currentPtfx[veh], (r / 255) + 0.0, (g / 255) + 0.0, (b / 255) + 0.0, 0)
           end
         elseif not DecorGetBool(veh, "smoke_active") and currentPtfx[veh] then
           StopParticleFxLooped(currentPtfx[veh], 0)
