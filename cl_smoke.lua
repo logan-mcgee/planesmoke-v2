@@ -27,7 +27,7 @@ Citizen.CreateThread(function ()
           local dist = #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(veh))
           if not currentPtfx[veh] and dist < config.maxdist then
             local vehModel = GetEntityModel(veh)
-            local r, g, b = 143, 52, 168--decodeSmoke(DecorGetInt(veh, "smoke_color"))
+            local r, g, b = decodeSmoke(DecorGetInt(veh, "smoke_color"))
             local size = DecorGetFloat(veh, "smoke_size")
 
             local outputPos
